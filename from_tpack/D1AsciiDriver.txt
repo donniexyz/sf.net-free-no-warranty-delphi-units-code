@@ -1,0 +1,135 @@
+Using ASCII Tables with Delphi
+-------------------------------
+Delphi supports using ASCII text files as tables, with limited 
+functionality.  ASCII tables are intended for exporting
+and importing data to and from other formats--in general, they are 
+not recommended for use as data sources for applications.
+
+Each ASCII table requires a data file (generally with .TXT 
+extension) and a schema file (with the same base file name 
+and .SCH extension). The schema file contains information about 
+the structure of the table and the datatypes of its columns (fields).  
+
+ASCII tables are always opened for exclusive access.  In other
+words, no more than one application (session) can access an 
+ASCII table at one time.  If you have opened an ASCII table at
+design time, you must close it before running your application
+that opens the table at run time.
+
+Copying a table to ASCII format with Database Desktop or a TBatchmove
+component will automatically create a schema file as well as the 
+ASCII data file.  ASCII tables are always created with FIXED filetype.
+When creating an ASCII table with Delphi (for example with BatchMove 
+or CreateTable methods), you must specify TableType as ttASCII.  You 
+should not leave TableType as ttDefault.
+
+ASCII tables do not support the following:
+* Indexes (and therefore, any methods or functions that require an
+  index, such as GoToKey, SetRange, etc.)
+* TQuery components (SQL)
+* Deleting records
+* Inserting records.  Insert always appends the record to the end 
+  of the table.
+* Referential Integrity
+* Blob datatypes
+* DELIMITED tables do not allow modification (editing) of records
+
+The Schema File
+---------------
+All information in the schema file is case-insensitive.
+Here is a sample of what a schema file looks like:
+
+[CUSTOMER]  	      		// File name with no extension.
+FILETYPE = VARYING 		// Format: VARYING or FIXED
+CHARSET = ascii			// Language driver name.
+DELIMITER = "        		// Delimiter for char fields.
+SEPARATOR = ,	     		// Separator character 
+Field1 = Name,CHAR,12,0,0	// Field information
+Field2 = Salary,FLOAT,8,2,12 	
+
+The schema file has a format similar to Windows INI files.
+The file begins with the name of the table in brackets.
+The second line specifies the file format following the 
+keyword FILETYPE: FIXED or VARYING.
+* In a FIXED format file, each field always takes up a fixed
+  number of characters in the file, and the data is padded with
+  blanks as needed. 
+* In a VARYING file, each field takes a variable number of characters,
+  each character field is enclosed by DELIMITER characters, and the 
+  fields are separated by a SEPARATOR character.  The DELIMITER and 
+  SEPARATOR must be specified for a VARYING format file, but
+  not for a FIXED format file.
+
+The CHARSET attribute specifies the name of the language
+driver to use.  This is the base file name of the .LD
+file used for localization purposes.
+
+The remaining lines specify the attributes of the table's 
+fields (columns). Each line must begin with "Fieldx = ", 
+where x is the field number (i.e. Field1, Field2, and so on).
+Then comes a comma-delimited list specifying:
+* Field name - Same restrictions as Paradox field names.
+* Datatype - The field data type.  See below.
+* Number of characters or units.  Must be <= 20 for numeric
+  data types.  Total maximum number of characters for date/time 
+  datatypes (including / and : separators).
+* Number of digits after the decimal (FLOAT only).
+* Offset - Number of characters from the beginning of the line
+  that the field begins.  Used for FIXED format only.
+
+The following data types are supported:
+CHAR - Character
+FLOAT - 64-bit floating point
+NUMBER - 16-bit integer
+BOOL - Boolean (T or F)
+LONGINT - 32-bit long integer
+DATE - Date field.  Format specified by IDAPI.CFG
+TIME - Time field. Format specified by IDAPI.CFG
+TIMESTAMP - Date + Time field. Format specified by IDAPI.CFG
+
+NOTE: You can specify Date and time formats in the BDE configuration 
+utility  
+
+Example 1 - VARYING format file 
+-------------------------------
+CUSTOMER.SCH:
+
+[CUSTOMER]
+Filetype=VARYING
+Delimiter="
+Separator=,
+CharSet=ascii
+Field1=Customer No,Float,20,04,00
+Field2=Name,Char,30,00,20
+Field3=Phone,Char,15,00,145
+Field4=First Contact,Date,11,00,160
+
+CUSTOMER.TXT:
+
+1221.0000,"Kauai Dive Shoppe","808-555-0269",04/03/1994
+1231.0000,"Unisco","809-555-3915",02/28/1994
+1351.0000,"Sight Diver","357-6-876708",04/12/1994
+1354.0000,"Cayman Divers World Unlimited","809-555-8576",04/17/1994
+1356.0000,"Tom Sawyer Diving Centre","809-555-7281",04/20/1994
+
+Example 2 - FIXED format file
+-----------------------------
+CUSTOMER.SCH:
+
+[CUSTOMER]
+Filetype=Fixed
+CharSet=ascii
+Field1=Customer No,Float,20,04,00
+Field2=Name,Char,30,00,20
+Field3=Phone,Char,15,00,145
+Field4=First Contact,Date,08,00,160
+
+CUSTOMER.TXT:
+
+           1221.0000Kauai Dive Shoppe             808-555-0269   04/03/94
+           1231.0000Unisco                        809-555-3915   02/28/94
+           1351.0000Sight Diver                   357-6-876708   04/12/94
+           1354.0000Cayman Divers World Unlimited 809-555-8576   04/17/94
+           1356.0000Tom Sawyer Diving Centre      809-555-7281   04/20/94
+
+
