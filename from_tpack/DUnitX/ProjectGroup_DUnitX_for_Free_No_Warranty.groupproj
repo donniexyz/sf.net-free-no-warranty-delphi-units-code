@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{0E5CBEAF-4CB9-4AFB-969F-F4203D7F098B}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="DUnitX_for_Free_No_Warranty.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="DUnitX_for_Free_No_Warranty">
+        <MSBuild Projects="DUnitX_for_Free_No_Warranty.dproj"/>
+    </Target>
+    <Target Name="DUnitX_for_Free_No_Warranty:Clean">
+        <MSBuild Projects="DUnitX_for_Free_No_Warranty.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DUnitX_for_Free_No_Warranty:Make">
+        <MSBuild Projects="DUnitX_for_Free_No_Warranty.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="DUnitX_for_Free_No_Warranty"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="DUnitX_for_Free_No_Warranty:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="DUnitX_for_Free_No_Warranty:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
