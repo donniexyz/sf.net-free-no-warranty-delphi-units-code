@@ -6,8 +6,8 @@
   {$ENDIF }
 
   {$IFDEF MSWINDOWS}
-  test_ucPipe in '..\..\test_ucPipe.pas',
-  //test_tpRTTI in '..\..\test_tpRTTI.pas',
+  test_ucPipe in 'test_ucPipe.pas',
+  test_tpRTTI in 'test_tpRTTI.pas',
   {$ENDIF }
 
 // active tests
