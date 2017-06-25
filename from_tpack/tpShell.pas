@@ -33,13 +33,13 @@ interface
 
 uses
 {$IFDEF MSWINDOWS}
-  Windows, Forms, Controls,
+  Windows, Forms, Controls, Messages,
 {$ENDIF}
 {$IFDEF LINUX}
-  QForms, QControls,
+// Kylix  QForms, QControls,
 {$ENDIF}
-  Classes, SysUtils, Messages,
-  updateOK, tpAction, utIPCObj, ucString;
+  Classes, SysUtils, 
+  updateOK, tpAction, ucWinSecurityObj, ucString;
 
 Const
   DefaultProcessor = 'COMMAND.COM';
