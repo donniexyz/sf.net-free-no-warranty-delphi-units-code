@@ -52,7 +52,7 @@ function GetDosOutputA(const CmdLine: AnsiString;
 implementation
 
 uses
-  utIpcObj; // pre-initialized global security attribute
+  ucWinSecurityObj; // pre-initialized global security attribute in TPack
 
 const
   LineBufSize = 255;
