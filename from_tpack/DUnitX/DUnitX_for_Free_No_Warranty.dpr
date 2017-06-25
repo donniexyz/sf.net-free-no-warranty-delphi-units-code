@@ -33,11 +33,11 @@ uses
   ZM_LoggingBase,
   ZM_UTF8StringUtils,
   NativeXml,          // Full source available in ZaphodsMaps project
-  ZaphodsMap,
+  ZaphodsMap in '.\Externals\ZaphodsMap_Source\ZaphodsMap.pas',
   DUnitX.TestFramework,
 {$I DUnitX_for_Free_No_Warranty_uses.inc}
-  uFileIO_Helper,     // DUnitX utility code in ZaphodsMap project
-  uDUnitX_Logging_Helper;
+  uFileIO_Helper in '.\Externals\ZM_DUnitX_Common\uFileIO_Helper.pas',
+  uDUnitX_Logging_Helper in '.\Externals\ZM_DUnitX_Common\uDUnitX_Logging_Helper.pas';
 
 {$R *.res}
 
