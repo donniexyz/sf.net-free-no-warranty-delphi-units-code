@@ -25,6 +25,10 @@ unit test_ucPipe;
 interface
 
 {$I hrefdefines.inc}
+{
+  Master copy of hrefdefines.inc is versioned on Source Forge in the ZaphodsMap project:
+  https://sourceforge.net/p/zaphodsmap/code/HEAD/tree/trunk/ZaphodsMap/Source/hrefdefines.inc
+}
 
 {$Define HAVE_UNICONSOLE}  // little utility that writes Ansi, UTF8 and UTF16
 

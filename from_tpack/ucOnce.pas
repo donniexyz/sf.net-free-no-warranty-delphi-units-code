@@ -27,6 +27,10 @@ unit ucOnce; { ucOnce- run the application once only. }
 interface
 
 {$I hrefdefines.inc}
+{
+  Master copy of hrefdefines.inc is versioned on Source Forge in the ZaphodsMap project:
+  https://sourceforge.net/p/zaphodsmap/code/HEAD/tree/trunk/ZaphodsMap/Source/hrefdefines.inc
+}
 
 uses
 {$IFDEF POSIX}
