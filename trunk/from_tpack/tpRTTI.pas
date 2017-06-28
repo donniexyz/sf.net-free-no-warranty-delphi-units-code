@@ -36,14 +36,13 @@ unit tpRTTI;  // Delphi run time type information
   i.e. for best results, leave the code as you see it written here!
 *)
 
-(* This unit should compile in Free Pascal BUT does not work yet.
-  Result nil below.
-  When it does work, change tpShareB.pas to use this unit again.
-*)
-
 interface
 
 {$I hrefdefines.inc}
+{
+  Master copy of hrefdefines.inc is versioned on Source Forge in the ZaphodsMap project:
+  https://sourceforge.net/p/zaphodsmap/code/HEAD/tree/trunk/ZaphodsMap/Source/hrefdefines.inc
+}
 
 uses
   Classes, TypInfo;

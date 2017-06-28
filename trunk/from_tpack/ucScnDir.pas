@@ -28,6 +28,10 @@ Ported to Kylix 3 and Delphi for .Net on 31-May-2005.
 interface
 
 {$I hrefdefines.inc}
+{
+  Master copy of hrefdefines.inc is versioned on Source Forge in the ZaphodsMap project:
+  https://sourceforge.net/p/zaphodsmap/code/HEAD/tree/trunk/ZaphodsMap/Source/hrefdefines.inc
+}
 
 uses
 {$IFDEF CLR}
