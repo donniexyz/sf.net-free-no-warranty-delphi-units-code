@@ -179,7 +179,7 @@ begin
     @gsa, // global security attributes
     0) // number of bytes reserved for pipe
   then
-    tpRaise(exception, 'Error building the pipe');
+    Raise Exception.Create('Error building the pipe');
 
   FillChar(StartupInfo, sizeof(StartupInfo), 0);
   with StartupInfo do
