@@ -20,6 +20,7 @@ THE SOFTWARE.
 *)
 
 // Author of original version of this file: Michael Ax
+// Ported to Kylix by Vseslav.
 
 {Note: This unit is no longer required in WebHub as of v2.045, May 2005.}
 
@@ -40,7 +41,7 @@ uses
   ComCtrls, Menus,
   {$ENDIF}
 {$ENDIF}
-{$IFDEF LINUX}
+{$IFDEF KYLIX}
   QForms, QControls, QGraphics, QExtCtrls, Types,
 {$ENDIF}
   Classes, SysUtils, utForm;
@@ -63,7 +64,7 @@ type
     fDragPanel: TPanel;
     procedure SplitPaintBoxOver(Sender, Source: TObject;x,y:Integer;State:TDragState; var Accept:Boolean);
     procedure SplitPaintBoxPaint(Sender: TObject);
-{$IFDEF MSWINDOWSNOLINUXYET}
+{$IFDEF MSWINDOWS}
   {$IFDEF DOHELP}
     procedure WMHelp(var Message: TWMHelp); message WM_HELP;
   {$ENDIF}
@@ -125,7 +126,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-{$IFDEF MSWINDOWSNOLINUXYET}
+{$IFDEF MSWINDOWS}
   {$IFDEF DOHELP}
 procedure TtpSplitterForm.WMHelp(var Message: TWMHelp);
 var
@@ -258,7 +259,7 @@ begin
   if not (wc is TForm) then
     raise Exception.Create('Splitter-Panel must be visually owned by a TForm!');
   fDragForm:= TForm(wc);
-{$IFDEF MSWINDOWSNOLINUXYET}
+{$IFDEF MSWINDOWS}
   fDragImg:= fDragForm.GetFormImage; //wow!
 {$ELSE}
   fDragImg:= TBitMap.Create;
