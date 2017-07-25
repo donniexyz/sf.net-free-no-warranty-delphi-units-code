@@ -21,7 +21,7 @@ unit ucPipe;
   THE SOFTWARE.
 *)
 
-{ Confirmed working 18.June.2017 with Delphi 10.2 Tokyo "D25" }
+{ Confirmed working 26.July.2017 with Delphi 10.2 Tokyo "D25" }
 
 interface
 
@@ -52,6 +52,7 @@ function GetDosOutputA(const CmdLine: AnsiString;
 implementation
 
 uses
+  ZM_CodeSiteInterface,  // source in ZaphodsMap project on sf.net
   ucWinSecurityObj; // pre-initialized global security attribute in TPack
 
 const
@@ -59,6 +60,7 @@ const
 
 function GetDosOutput(ExeName, OptionalParams, Folder: UnicodeString;
   GetRawBytesProc: TGetRawBytesProc; out ErrorCode: Integer): RawByteString;
+const cFn = 'GetDosOutput';
 var
   hPipeRead, hPipeWrite: THandle;
   StartupInfo: TSTARTUPINFOW;
@@ -68,7 +70,14 @@ var
   BytesReadInt: Integer;
   snippet: RawByteString;
   RawResult: RawByteString;
+  InfoMsg: string;
+  ApplicationName: string;
+  CommandLine: string;
+  CurrentDirFolder: string;
+  lpApplicationName, lpCommandLine: Pointer;
 begin
+  //CSEnterMethod(nil, cFn);
+
   Result := '';
   ErrorCode := 0;
   if not CreatePipe(hPipeRead, // read handle
@@ -76,7 +85,11 @@ begin
     @gsa, // global security attributes
     0) // number of bytes reserved for pipe
   then
-    Raise Exception.Create( 'Error building the pipe' );
+  begin
+    InfoMsg := 'Error building the pipe';
+    CSSendError(cFn + ': ' + InfoMsg);
+    Raise Exception.Create( InfoMsg );
+  end;
 
   FillChar(StartupInfo, sizeof(StartupInfoW), 0);
   with StartupInfo do
@@ -91,76 +104,137 @@ begin
     hStdError := hPipeWrite;
   end;
 
-  if Folder = '' then
-    Folder := GetCurrentDir;
+  if Folder <> '' then
+    Folder := IncludeTrailingPathDelimiter(Folder);
+
+  //CSSend(csmLevel5, 'Folder', Folder);
+  //CSSend(csmLevel5, 'ExeName', ExeName);
+  //CSSend(csmLevel5, 'OptionalParams', OptionalParams);
+
+  CurrentDirFolder := GetCurrentDir;
+
+  if Pos('cmd.exe', ExeName) > 0 then
+  begin
+    ApplicationName := ExeName;
+    CommandLine := OptionalParams;
+  end
+  else
+  if SameText(ExtractFileExt(ExeName), '.bat') then
+  begin
+    { To run a batch file, you must start the command interpreter;
+      set lpApplicationName to cmd.exe and set lpCommandLine to the following
+      arguments: /c plus the name of the batch file.
+      Reference:
+      https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425(v=vs.85).aspx
+    }
+    ApplicationName := 'cmd.exe';
+    CommandLine := '/c ' + Folder + ExeName +
+      ' ' + OptionalParams;
+  end
+  else
+  begin
+    ApplicationName := '';
+    CommandLine := Folder + ExeName + ' ' + OptionalParams;
+  end;
+
+  //CSSend(csmLevel5, 'ApplicationName', ApplicationName);
+  //CSSend(csmLevel5, 'CommandLine', CommandLine);
+
+  if ApplicationName = '' then
+    lpApplicationName := nil
+  else
+    lpApplicationName := @ApplicationName[1];
+  if CommandLine = '' then
+    lpCommandLine := nil
+  else
+    lpCommandLine := @CommandLine[1];
+
 
   try
-    if not CreateProcessW(PWideChar(ExeName), // Application without params
-      PWideChar(ExeName + ' ' + OptionalParams), // Application with params
+    if not CreateProcess(
+      lpApplicationName,
+      lpCommandLine,
       @gsa, // pointer to process security attributes
       @gsa, // pointer to thread security attributes
       TRUE, // handle inheritance flag
       NORMAL_PRIORITY_CLASS, // creation flags
       nil, // pointer to new environment block
-      PWideChar(Folder), // pointer to current directory name
+      PChar(CurrentDirFolder), // NB: always non-blank here.
       StartupInfo, // pointer to STARTUPINFO
       ProcessInfo) // pointer to PROCESS_INFORMATION
     then
     begin
-      CloseHandle(hPipeWrite);
-      CloseHandle(hPipeRead);
       ErrorCode := GetLastError;
-      Exit;
+      if ErrorCode = 0 then
+        ErrorCode := 1;
+      CSSendError(cFn + ': CreateProcess ErrorCode ' + S(ErrorCode)
+      {$IFDEF MSWINDOWS}
+      + ' ' + SysErrorMessage(ErrorCode)
+      {$ENDIF}
+      );
     end;
   except
-    on E: exception do
+    on E: Exception do
     begin
+      CSSendException(nil, cFn, E);
       ErrorCode := GetLastError;
-      CloseHandle(hPipeWrite);
-      CloseHandle(hPipeRead);
-      Exit;
+      if ErrorCode = 0 then
+        ErrorCode := 1;
+      CSSendError(cFn + ': Exception ErrorCode ' + S(ErrorCode)
+      {$IFDEF MSWINDOWS}
+      + ' ' + SysErrorMessage(ErrorCode)
+      {$ENDIF}
+      );
     end;
   end;
 
   CloseHandle(hPipeWrite);
 
-  RawResult := '';
-  BytesRead := 0;
-
-  repeat
-    Sleep(10);
-    FillChar(tmpBuffer, LineBufSize, 0);
-    if ReadFile(hPipeRead, // handle of the read end of our pipe
-      tmpBuffer, // address of buffer  that receives data
-      LineBufSize, // number of bytes to read
-      BytesRead, // address of number of bytes read
-      nil) // non-overlapped.
-    then
-    begin
-      snippet := '';
-      SetLength(snippet, BytesRead);
-      BytesReadInt := BytesRead;
-      Move(tmpBuffer, snippet[1], BytesReadInt);
-      if assigned(GetRawBytesProc) then
-      begin
-        // NB: pass an array of Bytes, not a RawByteString which is Ansi.
-        GetRawBytesProc(tmpBuffer, BytesReadInt);
-      end;
-      RawResult := RawResult + snippet;
-    end
-    else
-      break;
-  until False;
-
-  with ProcessInfo do
+  if ErrorCode = 0 then
   begin
-    WaitForSingleObject(hProcess, INFINITE);
-    CloseHandle(hThread);
-    CloseHandle(hProcess);
+
+    RawResult := '';
+    BytesRead := 0;
+
+    repeat
+      Sleep(10);
+      FillChar(tmpBuffer, LineBufSize, 0);
+      if ReadFile(hPipeRead, // handle of the read end of our pipe
+        tmpBuffer, // address of buffer  that receives data
+        LineBufSize, // number of bytes to read
+        BytesRead, // address of number of bytes read
+        nil) // non-overlapped.
+      then
+      begin
+        snippet := '';
+        SetLength(snippet, BytesRead);
+        BytesReadInt := BytesRead;
+        Move(tmpBuffer, snippet[1], BytesReadInt);
+        if assigned(GetRawBytesProc) then
+        begin
+          // NB: pass an array of Bytes, not a RawByteString which is Ansi.
+          GetRawBytesProc(tmpBuffer, BytesReadInt);
+        end;
+        RawResult := RawResult + snippet;
+      end
+      else
+        break;
+    until False;
+
+    with ProcessInfo do
+    begin
+      WaitForSingleObject(hProcess, INFINITE);
+      CloseHandle(hThread);
+      CloseHandle(hProcess);
+    end;
+
+    Result := RawResult;
+    //CSSend('RawResult', string(RawResult));
   end;
 
   CloseHandle(hPipeRead);
-  Result := RawResult;
+
+  //CSExitMethod(nil, cFn);
 end;
 
 {$IFDEF MSWINDOWS}
