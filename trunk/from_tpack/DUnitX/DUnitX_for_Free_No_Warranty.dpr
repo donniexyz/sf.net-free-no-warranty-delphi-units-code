@@ -36,6 +36,7 @@ uses
   ZaphodsMap in '.\Externals\ZaphodsMap_Source\ZaphodsMap.pas',
   DUnitX.TestFramework,
 {$I DUnitX_for_Free_No_Warranty_uses.inc}
+  uZM_Lingvo_Helper in '.\Externals\ZM_DUnitX_Common\uZM_Lingvo_Helper.pas',
   uFileIO_Helper in '.\Externals\ZM_DUnitX_Common\uFileIO_Helper.pas',
   uDUnitX_Logging_Helper in '.\Externals\ZM_DUnitX_Common\uDUnitX_Logging_Helper.pas';
 

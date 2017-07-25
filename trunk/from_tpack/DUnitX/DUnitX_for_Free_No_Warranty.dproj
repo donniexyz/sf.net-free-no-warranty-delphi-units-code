@@ -59,8 +59,8 @@
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
         <DCC_UnitSearchPath>.\Externals\\ZaphodsMap_Source;.\Externals\ZM_DUnitX_Common;K:\WebHub\TPack;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <DCC_ExeOutput>K:\WebHub\tests\TempBuild\Executable\D25\$(Platform)\$(Config)</DCC_ExeOutput>
-        <DCC_DcuOutput>K:\WebHub\tests\TempBuild\DCU\D25\$(Platform)\$(Config</DCC_DcuOutput>
+        <DCC_ExeOutput>.\TempBuild\Executable\D25\$(Platform)\$(Config)</DCC_ExeOutput>
+        <DCC_DcuOutput>.\TempBuild\DCU\D25\$(Platform)\$(Config</DCC_DcuOutput>
         <DCC_Define>DUNIT;PREVENTSVCMGR;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
@@ -88,7 +88,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
-        <Manifest_File>(None)</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
@@ -98,6 +97,7 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="Externals\ZaphodsMap_Source\ZaphodsMap.pas"/>
+        <DCCReference Include="Externals\ZM_DUnitX_Common\uZM_Lingvo_Helper.pas"/>
         <DCCReference Include="Externals\ZM_DUnitX_Common\uFileIO_Helper.pas"/>
         <DCCReference Include="Externals\ZM_DUnitX_Common\uDUnitX_Logging_Helper.pas"/>
         <BuildConfiguration Include="Debug">
@@ -123,6 +123,7 @@
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="D:\Apps\HREFTools\Rubicon\packages\pkg_d25_win32\rbc40_core_pas_ide_d25_win32.bpl">HREF Tools Rubicon - core [ide]</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Platforms>
