@@ -76,7 +76,7 @@ var
   CurrentDirFolder: string;
   lpApplicationName, lpCommandLine: Pointer;
 begin
-  //CSEnterMethod(nil, cFn);
+  {$IFDEF LOGUCPIPE}CSEnterMethod(nil, cFn);{$ENDIF}
 
   Result := '';
   ErrorCode := 0;
@@ -107,9 +107,11 @@ begin
   if Folder <> '' then
     Folder := IncludeTrailingPathDelimiter(Folder);
 
-  //CSSend(csmLevel5, 'Folder', Folder);
-  //CSSend(csmLevel5, 'ExeName', ExeName);
-  //CSSend(csmLevel5, 'OptionalParams', OptionalParams);
+  {$IFDEF LOGUCPIPE}
+  CSSend(csmLevel5, 'Folder', Folder);
+  CSSend(csmLevel5, 'ExeName', ExeName);
+  CSSend(csmLevel5, 'OptionalParams', OptionalParams);
+  {$ENDIF}
 
   CurrentDirFolder := GetCurrentDir;
 
@@ -127,9 +129,8 @@ begin
       Reference:
       https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425(v=vs.85).aspx
     }
-    ApplicationName := 'cmd.exe';
-    CommandLine := '/c ' + Folder + ExeName +
-      ' ' + OptionalParams;
+    ApplicationName := GetEnvironmentVariable('windir') + '\system32\cmd.exe';
+    CommandLine := '/c ' + Folder + ExeName + ' ' + OptionalParams;
   end
   else
   begin
@@ -137,8 +138,10 @@ begin
     CommandLine := Folder + ExeName + ' ' + OptionalParams;
   end;
 
-  //CSSend(csmLevel5, 'ApplicationName', ApplicationName);
-  //CSSend(csmLevel5, 'CommandLine', CommandLine);
+  {$IFDEF LOGUCPIPE}
+  CSSend(csmLevel5, 'ApplicationName', ApplicationName);
+  CSSend(csmLevel5, 'CommandLine', CommandLine);
+  {$ENDIF}
 
   if ApplicationName = '' then
     lpApplicationName := nil
@@ -234,7 +237,7 @@ begin
 
   CloseHandle(hPipeRead);
 
-  //CSExitMethod(nil, cFn);
+  {$IFDEF LOGUCPIPE}CSExitMethod(nil, cFn);{$ENDIF}
 end;
 
 {$IFDEF MSWINDOWS}

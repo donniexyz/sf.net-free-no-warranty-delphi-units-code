@@ -34,7 +34,7 @@ uses
   {$ENDIF }
   uCode;   // in TPack
 
-{$R *.res}
+{.$.R *.res}
 
 type
   LatinStr8 = type UTF8String;

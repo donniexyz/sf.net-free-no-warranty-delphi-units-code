@@ -68,6 +68,8 @@ type
     procedure Test_ucPipe_GetDosOutput_UTF8_UniConsole;
     [Test]
     procedure Test_ucPipe_GetDosOutput_UTF16_UniConsole;
+    [Test]
+    procedure Test_ucPipe_GetDosOutput_Bat_UniConsole;
     {$ENDIF}
 
   {$IFDEF MSWINDOWS}
@@ -241,6 +243,27 @@ begin
       AnsiCodePageToUnicode(SAnsi, 1252));
   DeleteFile(cTestFile);
 end;
+
+procedure TTest_ucPipe.Test_ucPipe_GetDosOutput_Bat_UniConsole;
+const cFn = 'Test_ucPipe_GetDosOutput_Bat_UniConsole';
+var
+  SRaw: RawByteString;
+  S8: UTF8String;
+  ErrorCode: Integer;
+begin
+  {$IFDEF CodeSite}CSEnterMethod(Self, cFn);{$ENDIF}
+
+  {$IFDEF MSWINDOWS}
+  SRaw := GetDosOutput('run-uniconsole-utf8.bat', '', GetCurrentDir +
+    '\..\..\..\..\..\UniConsole\', nil, ErrorCode);
+  S8 := SRaw;
+  {$IFDEF CodeSite}CSSend('S8', string(S8));{$ENDIF}
+  Assert.AreNotEqual(0, Pos('utf8', S8), string(S8));
+  {$ENDIF}
+
+  {$IFDEF CodeSite}CSExitMethod(Self, cFn);{$ENDIF}
+end;
+
 {$ENDIF}
 
 {$IFDEF HAVE_UNICONSOLE}
