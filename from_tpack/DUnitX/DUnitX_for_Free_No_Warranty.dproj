@@ -58,10 +58,10 @@
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
-        <DCC_UnitSearchPath>.\Externals\\ZaphodsMap_Source;.\Externals\ZM_DUnitX_Common;K:\WebHub\TPack;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>.\Externals\\ZaphodsMap_Source;.\Externals\ZM_DUnitX_Common;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_ExeOutput>.\TempBuild\Executable\D25\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_DcuOutput>.\TempBuild\DCU\D25\$(Platform)\$(Config</DCC_DcuOutput>
-        <DCC_Define>DUNIT;PREVENTSVCMGR;$(DCC_Define)</DCC_Define>
+        <DCC_Define>DUNIT;PREVENTSVCMGR;CodeSite;LOGUCPIPE;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;Vcl;$(DCC_Namespace)</DCC_Namespace>
@@ -97,6 +97,10 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="Externals\ZaphodsMap_Source\ZaphodsMap.pas"/>
+        <DCCReference Include="..\..\..\tpack\ucode.pas"/>
+        <DCCReference Include="..\..\..\tpack\ucVers.pas"/>
+        <DCCReference Include="..\..\..\tpack\ucWinSecurityObj.pas"/>
+        <DCCReference Include="..\..\..\tpack\ucStringWinAnsi.pas"/>
         <DCCReference Include="Externals\ZM_DUnitX_Common\uZM_Lingvo_Helper.pas"/>
         <DCCReference Include="Externals\ZM_DUnitX_Common\uFileIO_Helper.pas"/>
         <DCCReference Include="Externals\ZM_DUnitX_Common\uDUnitX_Logging_Helper.pas"/>
