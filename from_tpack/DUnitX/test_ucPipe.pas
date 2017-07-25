@@ -35,6 +35,7 @@ interface
 uses
   SysUtils,
   DUnitX.TestFrameWork,
+  {$IFDEF CodeSite}ZM_CodeSiteInterface,{$ENDIF}
   ucPipe;
 
 type
@@ -93,7 +94,7 @@ uses
   {$IFDEF MSWINDOWS}Windows,{$ENDIF} // to avoid DCC Hint about inline function
   Math, WideStrUtils, Character,
   {$IFDEF MSWINDOWS}ucStringWinAnsi,{$ENDIF}
-  ucLogFil, uFileIO_Helper, uDUnitX_Logging_Helper;
+  ucLogFil, uFileIO_Helper, uDUnitX_Logging_Helper, uZM_Lingvo_Helper;
 
 {$IFDEF MSWINDOWS}
 type
@@ -153,6 +154,7 @@ begin
 end;
 
 procedure TTest_ucPipe.Test_ucPipe_GetDosOutput_UTF16Directory;
+const cFn = 'Test_ucPipe_GetDosOutput_UTF16Directory';
 var
   APath: string;
   S16: UnicodeString;
@@ -164,19 +166,25 @@ var
 const
   cDirectoryTest = 'directory_test.utx';
 begin
+  {$IFDEF CodeSite}CSEnterMethod(Self, cFn);{$ENDIF}
+
   FTemp16ByteCount := 0;
   FTemp16[0] := 0;
 
-  APath := Unicode_Test_Data_Path;
-  Assert.IsTrue(DirectoryExists(APath),
+  APath := Unicode_Test_Data_Path; //'..\..\..\..\..\Externals\ZM_TestDataFiles\UniData\';
+  {$IFDEF CodeSite}
+  CSSend(APath + 'chinese.utx', S(FileExists(APath + 'chinese.utx')));
+  {$ENDIF}
+  Assert.IsTrue(FileExists(APath + 'chinese.utx'),
     'APath required; adjust the TempBuild output to match up with other tests');
 
   // This does not display any Russian filenames on USA Windows 7.
-  SRaw := GetDosOutput(GetEnvironmentVariable('windir') +
-    '\system32\cmd.exe', '/U /c dir ' + //NB: /U Unicode
+  SRaw := GetDosOutput(GetEnvironmentVariable('windir') + '\system32\cmd.exe',
+    '/U /c dir ' + //NB: /U Unicode
     APath,
     '', AssembleUTF16, ErrorCode);
   DUnit_Log('SRaw', SRaw);
+  Assert.AreEqual(0, ErrorCode, 't01: ' + SysErrorMessage(ErrorCode));
 
   // NB: SRaw contains garbage because it is really an AnsiString
   n := FTemp16ByteCount div SizeOf(WideChar);
@@ -185,8 +193,6 @@ begin
   // This works to turn an array of bytes into a UnicodeString  28-July-2011
   Move(FTemp16[0], S16[1], FTemp16ByteCount);
 
-  //StringWriteToFile(cDirectoryTest, S);
-  Assert.AreEqual(0, ErrorCode, 't01: ' + SysErrorMessage(ErrorCode));
   Assert.AreNotEqual('', S16, 't02');
   DUnit_Log('S16', S16);
 
@@ -212,6 +218,8 @@ begin
   Assert.AreNotEqual(0, Pos(RussianWord, S16), 't06: ' + InfoMsg);
 
   DeleteFile(cDirectoryTest);
+
+  {$IFDEF CodeSite}CSExitMethod(Self, cFn);{$ENDIF}
 end;
 
 {$IFDEF HAVE_UNICONSOLE}
@@ -237,6 +245,7 @@ end;
 
 {$IFDEF HAVE_UNICONSOLE}
 procedure TTest_ucPipe.Test_ucPipe_GetDosOutput_UTF8_UniConsole;
+const cFn = 'Test_ucPipe_GetDosOutput_UTF8_UniConsole';
 var
   S8: UTF8String;
   SRaw: RawByteString;
@@ -246,12 +255,17 @@ var
 const
   cTestFile = 'uniconsole_utf8.utx';
 begin
+  {$IFDEF CodeSite}CSEnterMethod(Self, cFn);{$ENDIF}
+
+  Assert.IsTrue(FileExists('UniConsole.exe'),
+    'File does NOT exist in ' + GetCurrentDir + ' : uniconsole.exe');
+
   // NB: much depends on how UniConsole.exe was compiled.
   SRaw := GetDosOutput('UniConsole.exe', '-utf8', '', nil, ErrorCode);
 
   DUnit_Log('SRaw', string(SRaw));
 
-  S8 := SRaw;  // do not convert. just cast to UTF8String.
+  S8 := SRaw;  // do not convert. just assign to a UTF8String.
 
   DUnit_Log('S8', string(S8));
   UTF8StringWriteToFile(cTestFile, S8);
@@ -264,6 +278,8 @@ begin
   Assert.AreNotEqual(0, x,
     'text:' + Houses16 + ' NOT found in ' + SUni);
   DeleteFile(cTestFile);
+
+  {$IFDEF CodeSite}CSExitMethod(Self, cFn);{$ENDIF}
 end;
 {$ENDIF}
 
