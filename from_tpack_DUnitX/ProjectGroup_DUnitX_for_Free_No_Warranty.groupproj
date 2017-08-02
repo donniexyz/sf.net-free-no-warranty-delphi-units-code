@@ -6,6 +6,9 @@
         <Projects Include="DUnitX_for_Free_No_Warranty.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="UniConsole\UniConsole.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -23,14 +26,23 @@
     <Target Name="DUnitX_for_Free_No_Warranty:Make">
         <MSBuild Projects="DUnitX_for_Free_No_Warranty.dproj" Targets="Make"/>
     </Target>
+    <Target Name="UniConsole">
+        <MSBuild Projects="UniConsole\UniConsole.dproj"/>
+    </Target>
+    <Target Name="UniConsole:Clean">
+        <MSBuild Projects="UniConsole\UniConsole.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="UniConsole:Make">
+        <MSBuild Projects="UniConsole\UniConsole.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="DUnitX_for_Free_No_Warranty"/>
+        <CallTarget Targets="DUnitX_for_Free_No_Warranty;UniConsole"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="DUnitX_for_Free_No_Warranty:Clean"/>
+        <CallTarget Targets="DUnitX_for_Free_No_Warranty:Clean;UniConsole:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="DUnitX_for_Free_No_Warranty:Make"/>
+        <CallTarget Targets="DUnitX_for_Free_No_Warranty:Make;UniConsole:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
