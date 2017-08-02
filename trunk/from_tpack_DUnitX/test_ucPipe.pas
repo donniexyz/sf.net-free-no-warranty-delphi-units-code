@@ -122,8 +122,8 @@ end;
 procedure TTest_ucPipe.SetUp;
 begin
   FMiddleDot8 := UTF8String(cMiddleDot);
-  Houses8 := AnsiToUTF8Ex(cHauserDeu, 1252);
-  Houses16 := AnsiCodePageToUnicode(cHauserDeu, 1252);
+  Houses8 := Houses_DE_8; 
+  Houses16 := Houses_DE; 
 end;
 
 procedure TTest_ucPipe.Test_ucPipe_DefaultCodePage;
@@ -202,7 +202,7 @@ begin
     't03: The following does not appear to be a Directory listing: ' + S16);
   Assert.isTrue(Pos('houses', S16) > 0,
     't04: Did not list the file named [houses.utx]: ' + S16);
-  Assert.isTrue(Pos(AnsiCodePageToUnicode(cHauserDeu, 1252), S16) > 0,
+  Assert.isTrue(Pos(Houses_DE, S16) > 0,
     't05: Did not list the file named [Häuser.utx]: ' + S16);
 
   RussianWord := Welcome_in_Russian;  // see DUnitX files in ZaphodsMap project
@@ -239,7 +239,7 @@ begin
   Assert.isTrue(SAnsi <> '');
   X := Pos(LatinStr('text:') + cHauserDeu, SAnsi);
   Assert.isTrue(X > 0,
-    'text:' + AnsiCodePageToUnicode(cHauserDeu, 1252) + 'NOT found in: ' +
+    'text:' + Houses_DE + 'NOT found in: ' +
       AnsiCodePageToUnicode(SAnsi, 1252));
   DeleteFile(cTestFile);
 end;
@@ -312,7 +312,8 @@ procedure TTest_ucPipe.Test_ucPipe_Pos_Ansi;
 var
   x: Integer;
 begin
-  x := Pos(cHauserDeu, UnicodeToAnsiCodePage('text:Häuser' + cMiddleDot, 1252));
+  x := Pos(cHauserDeu,
+    UnicodeToAnsiCodePage('text:' + Houses_DE + cMiddleDot, 1252));
   Assert.isTrue(x > 0, Format('x is %d', [x]));
 end;
 {$ENDIF}
@@ -322,10 +323,11 @@ var
   x: Integer;
 begin
   x := Pos(Houses16, 'text:' + Houses16);
-  Assert.isTrue(x > 0, 'Pos Unicode');
+  Assert.AreNotEqual(0, x);
 end;
 
 procedure TTest_ucPipe.Test_ucPipe_Delphi_Raw_CastAs_UTF8;
+{$IFDEF MSWINDOWS}
 var
   S8, S8FromAnsi, S8FromRaw: UTF8String;
   SRaw: RawByteString;
@@ -344,6 +346,9 @@ begin
 
   S8FromRaw := UTF8String(SRaw);  // should not alter data
   Assert.isTrue(S8 <> S8FromRaw, 'See S8FromRaw; Delphi cast via UTF8String');
+{$ELSE}
+begin
+{$ENDIF}
 end;
 
 {$IFDEF HAVE_UNICONSOLE}
