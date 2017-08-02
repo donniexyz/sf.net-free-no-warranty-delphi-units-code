@@ -97,10 +97,10 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="Externals\ZaphodsMap_Source\ZaphodsMap.pas"/>
-        <DCCReference Include="..\..\..\tpack\ucode.pas"/>
-        <DCCReference Include="..\..\..\tpack\ucVers.pas"/>
-        <DCCReference Include="..\..\..\tpack\ucWinSecurityObj.pas"/>
-        <DCCReference Include="..\..\..\tpack\ucStringWinAnsi.pas"/>
+        <DCCReference Include="..\..\tpack\ucode.pas"/>
+        <DCCReference Include="..\..\tpack\ucVers.pas"/>
+        <DCCReference Include="..\..\tpack\ucWinSecurityObj.pas"/>
+        <DCCReference Include="..\..\tpack\ucStringWinAnsi.pas"/>
         <DCCReference Include="Externals\ZM_DUnitX_Common\uZM_Lingvo_Helper.pas"/>
         <DCCReference Include="Externals\ZM_DUnitX_Common\uFileIO_Helper.pas"/>
         <DCCReference Include="Externals\ZM_DUnitX_Common\uDUnitX_Logging_Helper.pas"/>
