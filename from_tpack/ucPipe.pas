@@ -27,10 +27,10 @@ interface
 
 uses
   Classes, // defines TGetStrProc
-  SysUtils, // defines Exception
 {$IFDEF MSWINDOWS}Windows, {$ENDIF}
 {$IFDEF POSIX}Does not yet support Linux64.{$ENDIF}
-  ucString;
+  SysUtils // defines Exception
+  ;
 
 type
   TLittleBuffer = Array [0 .. 256] of Byte;
@@ -39,7 +39,6 @@ type
 {$ENDIF}
   TGetRawBytesProc = procedure(var Data: TLittleBuffer; const Count: Integer)
     of object;
-
 
 function GetDosOutput(ExeName, OptionalParams, Folder: UnicodeString;
   GetRawBytesProc: TGetRawBytesProc; out ErrorCode: Integer): RawByteString;
