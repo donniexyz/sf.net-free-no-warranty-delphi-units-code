@@ -1,0 +1,62 @@
+{$IMPLICITBUILD OFF}
+
+package f2hLib;
+
+{*******************************************************}
+{                                                       }
+{       Form to HTML converter "F2H"                    }
+{                                                       }
+{       Copyright (c) 1998-2016 HREF Tools Corp.        }
+{       http://www.href.com/f2h                         }
+{                                                       }
+{       This file is licensed under a Creative Commons  }
+{       Share-Alike 3.0 License.                        }
+{       http://creativecommons.org/licenses/by-sa/3.0/  }
+{       If you use this file, please keep this notice   }
+{       intact.                                         }
+{                                                       }
+{       Developed by HREF Tools Corp. 1998-2011         }
+{       First author: Philippe Maquet                   }
+{                                                       }
+{*******************************************************}
+
+{$I hrefdefines.inc}
+
+{$I HREFTools_LibSuffix.inc}
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST ON}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESIGNONLY}
+{$DESCRIPTION 'HREF Tools - Form to HTML Converter'}
+
+requires
+  designide,
+  vcl;
+
+contains
+  regf2h in 'regf2h.pas',
+  f2hdsgnt in 'f2hdsgnt.pas',
+  f2hF in 'f2hF.pas' {f2hFrm},
+  f2h in 'f2h.pas';
+
+end.
