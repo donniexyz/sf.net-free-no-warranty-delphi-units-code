@@ -4383,15 +4383,16 @@ begin
             with Attribute['Name'] do
                Options := Options - [aoIgnore] + [aoEditable];
          end
-      else begin
-         with Attribute['Type'] do
-            Options := Options + [aoIgnore];
-         with Attribute['AsAnchor'] do begin
-            Options := Options + [aoEditable];
-            Value := Value;
-         end;
-         with Attribute['Name'] do
-            Options := Options + [aoIgnore] - [aoEditable];
+      else 
+      begin
+        with Attribute['Type'] do
+          Options := Options + [aoIgnore];
+        Attribute['AsAnchor'].Options := 
+          Attribute['AsAnchor'].Options + [aoEditable];
+        Attribute['AsAnchor'].Value := Value;
+
+        with Attribute['Name'] do
+          Options := Options + [aoIgnore] - [aoEditable];
       end;
    end;
 end;
