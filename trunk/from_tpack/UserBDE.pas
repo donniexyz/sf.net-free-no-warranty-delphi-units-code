@@ -89,7 +89,7 @@ begin
   fzLangDriver[0] := #0;
 end;
 
-function TtpBDEUserInfo.DoUpdate:boolean;
+function TtpBDEUserInfo.DoUpdate: Boolean;
 var
   BDEcfg: SYSConfig;      { BDE Configuration information record }
 begin
@@ -97,15 +97,17 @@ begin
   if not Result then
     Exit;
   DbiGetSysConfig(BDEcfg);
-  with BDEcfg do begin
+  with BDEcfg do 
+  begin
     fNetProtocol    := iNetProtocol;
     fLocalShare     := bLocalShare;
     fNetShare       := bNetShare;
-    fzNetType       := fzNetType;
     fzUserName      := szUserName;
-    fzIniFile       := fzIniFile;
-    fzLangDriver    := fzLangDriver;
-    end;
+  end;
+  // use complete syntax on coincidental names:
+  BDEcfg.fzNetType    := Self.fzNetType;
+  BDEcfg.fzIniFile    := Self.fzIniFile;
+  BDEcfg.fzLangDriver := Self.fzLangDriver;
 end;
 
 {-----------------------------------------------------------------------------------------}
