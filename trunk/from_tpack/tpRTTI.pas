@@ -101,8 +101,8 @@ implementation
 
 uses
   SysUtils,
-  {avoid Forms unit here}
-  MultiTypeApp;
+  {$IFDEF FMACTIVE} FMX.Forms {$ELSE} MultiTypeApp {$ENDIF}
+  ;
 
 // used to cache component in GetProperty and HasProperty
 
@@ -139,7 +139,12 @@ end;
 
 function FindComponentByName(const ComponentName: string): TComponent;
 begin
-  Result := FindComponentByNameAt(Application.RootOwner, ComponentName);
+  Result := FindComponentByNameAt(
+    {$IFDEF FMACTIVE}FMX.Forms.Application.MainForm,
+    {$ELSE}
+    Application.RootOwner,
+    {$ENDIF}
+    ComponentName);
 end;
 
 function GetPropertyAsInteger(const ComponentName, PropertyName
