@@ -1,7 +1,7 @@
 unit test_utIPCObj;
 
 { ---------------------------------------------------------------------------- }
-{ * Copyright (c) 2000-2017 HREF Tools Corp.  All Rights Reserved Worldwide. * }
+{ * Copyright (c) 2000-2018 HREF Tools Corp.  All Rights Reserved Worldwide. * }
 { *                                                                          * }
 { * This source code file is part of TPACK and WebHub. Please obtain         * }
 { * a development license from HREF Tools Corp. before using this file, and  * }

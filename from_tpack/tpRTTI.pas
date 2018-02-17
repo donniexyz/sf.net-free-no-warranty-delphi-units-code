@@ -1,6 +1,6 @@
 unit tpRTTI;  // Delphi run time type information
 (*
-  Copyright (c) 2000-2017 HREF Tools Corp.
+  Copyright (c) 2000-2018 HREF Tools Corp.
   Public at https://sourceforge.net/p/free-no-warranty-delphi-units/code/HEAD/tree/trunk/from_tpack/tpRTTI.pas
 
   Permission is hereby granted, on 31-Oct-2003, free of charge, to any person

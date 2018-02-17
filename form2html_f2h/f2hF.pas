@@ -4,7 +4,7 @@ unit f2hf;
 {                                                       }
 {       Form to HTML converter "F2H"                    }
 {                                                       }
-{       Copyright (c) 1998-2016 HREF Tools Corp.        }
+{       Copyright (c) 1998-2018 HREF Tools Corp.        }
 {       http://www.href.com/f2h                         }
 {                                                       }
 {       This file is licensed under a Creative Commons  }
