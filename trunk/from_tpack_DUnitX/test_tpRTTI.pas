@@ -1,7 +1,7 @@
 unit test_tpRTTI;
 
 (*
-  Copyright (c) 2000-2017 HREF Tools Corp.
+  Copyright (c) 2000-2018 HREF Tools Corp.
 
   Permission is hereby granted, on 18-Jun-2017, free of charge, to any person
   obtaining a copy of this file (the "Software"), to deal in the Software
