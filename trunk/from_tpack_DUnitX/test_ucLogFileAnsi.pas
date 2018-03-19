@@ -116,7 +116,7 @@ end;
 
 procedure TTest_ucLogFileAnsi.TearDown;
 begin
-  //DeleteTestFile;
+  DeleteTestFile;
   DeleteTestLogFile;
 end;
 
