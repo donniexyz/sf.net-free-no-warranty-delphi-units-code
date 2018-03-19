@@ -322,17 +322,23 @@ end;
 
 function TtpSharedInt32.GetValue: Int32;
 begin
-  if assigned(fMutex) then
-    with fMutex do
-      try
-        Get(Infinite);
-        Result := Int32(fSharedMem.Buffer^);
-      finally
-        Release;
-      end
-  else
-    Result := 0;
-  fLastValue := Result;
+  Result := 0;
+  if (self <> nil) then
+  begin
+    if assigned(fMutex) then
+    begin
+      with fMutex do
+        try
+          Get(Infinite);
+          if fSharedMem.Buffer <> nil then  // can be nil during DUnitX cross-thread
+            Result := Int32(fSharedMem.Buffer^)
+          else
+        finally
+          Release;
+        end;
+    end;
+    fLastValue := Result;
+  end;
 end;
 
 end.
