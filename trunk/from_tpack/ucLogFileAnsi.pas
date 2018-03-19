@@ -34,31 +34,32 @@ uses
 
 // ---- replace/output to a file
 
-{$IFDEF MSWINDOWS}
 // AnsiString variations
 procedure StringAnsiWriteToFile(const AFileName: string;
-  const AText: AnsiString); 
+  const AText: AnsiString);
+
 procedure StringAnsiAppendToFile(const AFileName: string;
-  const AText: AnsiString); 
+  const AText: AnsiString);
+
 procedure AppendLine(const AFileName: string; const AText: AnsiString);
-  overload;
+
 procedure StringWriteToStream(AStream: TStream;
   const AText: AnsiString);
+
 function StringLoadFromStream(AStream: TStream): AnsiString;
-{$ENDIF}
+
+function StringAnsiLoadFromFile(const AFilespec: string): AnsiString;
 
 implementation
 
 uses
-{$IFDEF MSWINDOWS}WideStrUtils,{$ENDIF}
+  WideStrUtils,
 // NB: IOUtils with TFile.OpenRead is NOT used because it does not read files
 // when they are open in any other process, even readonly in another text editor
   ZM_CodeSiteInterface,
-  {*htns*}ZM_LoggingBase,
-  {$IFDEF MSWINDOWS}ucStringWinAnsi,{$ENDIF}
-  {*htns*}ZM_UTF8StringUtils;
+  ZM_LoggingBase,
+  ZM_UTF8StringUtils;
   
-{$IFDEF MSWINDOWS}
 procedure AppendLine(const AFileName: string; const AText: AnsiString);
 //const cFn = 'AppendLine_w_AnsiString';
 begin
@@ -66,9 +67,7 @@ begin
   StringAnsiAppendToFile(AFileName, AText + sLineBreak);
   //CSExitMethod(nil, cFn);
 end;
-{$ENDIF}
 
-{$IFDEF MSWINDOWS}
 procedure StringAnsiAppendToFile(const AFileName: string;
   const AText: AnsiString); overload;
 {$IFDEF LogUcLog}const cFn = 'StringAnsiAppendToFile';{$ENDIF}
@@ -94,7 +93,6 @@ begin
   end;
   {$IFDEF LogUcLog}CSExitMethod(nil, cFn);{$ENDIF}
 end;
-{$ENDIF}
 
 procedure StringAppendToFile(const AFileName: string;
   const AText: UnicodeString); overload;
@@ -123,41 +121,14 @@ begin
   {$IFDEF LogUcLog}CSExitMethod(nil, cFn);{$ENDIF}
 end;
 
-procedure UTF8StringAppendToFile(const AFileName: string;
-  const AText: UTF8String; const FlagBOM: Boolean = True);
-var
-  AStream: TStream;
-  n: Int64;
-begin
-  AStream := nil;
-
-  try
-    if FileExists(AFileName) then
-      AStream := TFileStream.Create(AFileName, fmOpenWrite or
-        fmShareDenyWrite)
-    else
-    begin
-      AStream := TFileStream.Create(AFileName, fmCreate or fmShareDenyWrite);
-      if FlagBOM then
-        AStream.WriteBuffer(UTF8BOM, Length(UTF8BOM));
-    end;
-    AStream.Seek(0, soEnd);
-    n := Length(AText); // Length in Bytes which is >= UTF8Length
-    AStream.Write(AText[1], Int32(n));
-  finally
-    FreeAndNil(AStream);
-  end;
-end;
-
-{$IFDEF MSWINDOWS}
 procedure StringAnsiWriteToFile(const AFileName: string; const AText: AnsiString);
 begin
   DeleteFile(AFileName);
   StringAnsiAppendToFile(AFileName, AText);
 end;
-{$ENDIF}
 
-{$IFDEF MSWINDOWS}
+
+
 function StringLoadFromStream(AStream: TStream): AnsiString;
 // const cFn = StringLoadFromStream;
 var
@@ -167,14 +138,25 @@ begin
   SetLength(Result, ASize);
   AStream.Read(Result[1], Integer(ASize));
 end;
-{$ENDIF}
 
-{$IFDEF MSWINDOWS}
+function StringAnsiLoadFromFile(const AFilespec: string): AnsiString;
+var
+  AStream: TFileStream;
+begin
+  AStream := nil;
+  try
+    AStream := TFileStream.Create(AFilespec, fmOpenRead or fmShareDenyWrite);
+    Result := StringLoadFromStream(AStream);
+  finally
+    FreeAndNil(AStream);
+  end;
+end;
+
 procedure StringWriteToStream(AStream: TStream; const AText: AnsiString);
 begin
   AStream.WriteBuffer(AText[1], Length(AText));
 end;
-{$ENDIF}
+
 
 // initialization
 // finalization {none}
