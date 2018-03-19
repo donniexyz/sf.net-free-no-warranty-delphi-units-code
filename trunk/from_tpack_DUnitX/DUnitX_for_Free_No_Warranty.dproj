@@ -7,7 +7,7 @@
         <TargetedPlatforms>131</TargetedPlatforms>
         <AppType>Console</AppType>
         <FrameworkType>None</FrameworkType>
-        <ProjectVersion>18.2</ProjectVersion>
+        <ProjectVersion>18.4</ProjectVersion>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -58,7 +58,7 @@
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
-        <DCC_UnitSearchPath>.\Externals\\ZaphodsMap_Source;.\Externals\ZM_DUnitX_Common;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>.\Externals\\ZaphodsMap_Source;.\Externals\ZM_DUnitX_Common;D:\Program Files\Raize\CS5\Lib\RX10.2\$(Platform);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_ExeOutput>.\TempBuild\Executable\D25\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_DcuOutput>.\TempBuild\DCU\D25\$(Platform)\$(Config</DCC_DcuOutput>
         <DCC_Define>DUNIT;PREVENTSVCMGR;CodeSite;LOGUCPIPE;$(DCC_Define)</DCC_Define>
@@ -127,7 +127,6 @@
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="D:\Apps\HREFTools\Rubicon\packages\pkg_d25_win32\rbc40_core_pas_ide_d25_win32.bpl">HREF Tools Rubicon - core [ide]</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Platforms>
