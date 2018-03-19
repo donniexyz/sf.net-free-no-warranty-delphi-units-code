@@ -25,13 +25,17 @@ type
     procedure SetUp;
     [TearDown]
     procedure TearDown;
-  public
+  private
     [Test]
     procedure TestStringLoadFromStream_Ansi;
     [Test]
     procedure Test_Ansi_StringWriteToFile;
+  public
+    { The usual issue with these tests is that too many aspects of the testing
+      process itself interferes with the characters. }
     [Test]
-    procedure Test_Ansi_StringAppendToFile;
+    procedure Test_Ansi_StringAppendToFile;  // fails 19.Mar.2018
+  private
     [Test]
     procedure Test_Ansi_AppendLine;
   end;
@@ -112,41 +116,55 @@ end;
 
 procedure TTest_ucLogFileAnsi.TearDown;
 begin
-  DeleteTestFile;
+  //DeleteTestFile;
   DeleteTestLogFile;
 end;
 
 procedure TTest_ucLogFileAnsi.Test_Ansi_AppendLine;
 var
+  StrU: UnicodeString;
   idx: Integer;
   Str: string;
   y: TStringList;
+  LenOriginalAnsiLine: Integer;
+  Len1: Integer;
+  LineU: UnicodeString;
 begin
-  
+
   if FileExists(TestFileName) then
     DeleteFile(TestFileName);
+
+  StrU := AnsiCodePageToUnicode(TestStringA, 1252);
+  Assert.AreEqual(StrU, TestString, 'T 01');
+
+  LenOriginalAnsiLine := Length(TestStringA);  // includes CRLF chars
+  Assert.AreEqual(LenOriginalAnsiLine, Length(StrU), 'T 02');
 
   y := nil;
   try
     y := TStringList.Create;
-    y.Text := AnsiCodePageToUnicode(TestString, 1252);
+    y.Text := StrU;
 
     for idx := 0 to y.Count - 1 do
     begin
-      AppendLine(TestFileName, AnsiString(y.Strings[idx])); // sb codepage 1252
+      LineU := y.Strings[idx];
+      Assert.AreEqual(0, Pos(sLineBreak, LineU), 'trailing CRLF !');
+      AppendLine(TestFileName, AnsiString(Utf8ToAnsiEx(UTF8String(LineU), 1252))); // specifically codepage 1252
     end;
 
-    Str := TStringList_File_To_String(TestFileName);
+    Str := AnsiCodePageToUnicode(StringAnsiLoadFromFile(TestFileName), 1252);
+    Len1 := Length(Str);
+    Assert.AreEqual(LenOriginalAnsiLine, Len1, 'length check');
+    Assert.AreEqual(y.Text, Str, 'AppendLine T03; see file ' + TestFileName);
 
-    Assert.AreEqual(y.Text, Str, 'AppendLine 1x');
-
+    // repeat
     for idx := 0 to y.Count - 1 do
     begin
       AppendLine(TestFileName, AnsiString(y.Strings[idx])); // codepage 1252
     end;
 
-    Str := TStringList_File_To_String(TestFileName);
-    Assert.AreEqual(y.Text + y.Text, Str, 'AppendLine 2x');
+    Str := AnsiCodePageToUnicode(StringAnsiLoadFromFile(TestFileName), 1252);
+    Assert.AreEqual(StrU + StrU, Str, 'AppendLine T04');
   finally
     FreeAndNil(y);
   end;
@@ -167,17 +185,29 @@ end;
 procedure TTest_ucLogFileAnsi.Test_Ansi_StringAppendToFile;
 var
   SAnsi: AnsiString;
+  LenOriginal: Integer;
+  Len1, Len2: Integer;
 begin
   DeleteFile(TestFileName);
+
+  LenOriginal := Length(TestStringA);
+
   StringAnsiAppendToFile(TestFileName, TestStringA);
-  SAnsi := AnsiString(TStringList_File_To_String(TestFileName)); // codepage 1252
-  Assert.AreEqual(TestStringA, SAnsi, 'StringAppendToFile 1');
+  SAnsi := StringAnsiLoadFromFile(TestFileName);
+  Len1 := Length(SAnsi);
+
+  Assert.AreEqual(LenOriginal, Len1, 'length compared to StringAnsiLoadFromFile');
+  Assert.AreEqual(TestStringA, SAnsi, 'StringAnsiAppendToFile 1');
 
   StringAnsiAppendToFile(TestFileName, TestStringA);
 
-  SAnsi := AnsiString(TStringList_File_To_String(TestFileName));
+  SAnsi := StringAnsiLoadFromFile(TestFileName);
+  Len2 := Length(SAnsi);
+
+  Assert.AreEqual(2 * LenOriginal, Len2, '2x original length');
   Assert.AreEqual(
-    TestStringA + TestStringA, SAnsi, 'StringAppendToFile 2');
+    TestStringA + TestStringA, SAnsi, 'StringAnsiAppendToFile 2');
+
   DeleteFile(TestFileName);
 end;
 
