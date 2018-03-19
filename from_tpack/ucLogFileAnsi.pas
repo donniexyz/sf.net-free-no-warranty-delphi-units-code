@@ -43,7 +43,7 @@ procedure StringAnsiAppendToFile(const AFileName: string;
 procedure AppendLine(const AFileName: string; const AText: AnsiString);
   overload;
 procedure StringWriteToStream(AStream: TStream;
-  const AText: AnsiString); overload;
+  const AText: AnsiString);
 function StringLoadFromStream(AStream: TStream): AnsiString;
 {$ENDIF}
 
