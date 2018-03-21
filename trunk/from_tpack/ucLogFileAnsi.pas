@@ -103,6 +103,11 @@ begin
   {$IFDEF LogUcLog}CSEnterMethod(nil, cFn);
   CSSend('AText', AText);
   {$ENDIF}
+
+  {Alternative syntax in recent Delphi:
+     TFile.AppendAllText(AFileName, AText, TEncoding.Ansi); // uses IOUtils
+  }
+
   AStream := nil;
   try
     if FileExists(AFileName) then
